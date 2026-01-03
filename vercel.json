@@ -1,0 +1,9 @@
+{
+    "version": 2,
+    "builds": [
+        {"src": "MediaLoom", "use": "@vercel/python"}
+    ],
+    "routes": [
+        {"src": "/(.*)", "dest": "MediaLoom"}
+    ]
+}
