@@ -12,6 +12,13 @@ from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 async def read_root():
     return {"message": "I am Alive!"}
 
+# ----------------------------- Media-Loom-Shown ----------------------------- #
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..core"))
+
+@app.get("/medialoom")
+def media_loom():
+    return FileResponse(os.path.join(BASE_DIR, "index.html"))
+    
 # ----------------------------- Upload-Media ----------------------------- #
 
 @api.post("/upload/")
