@@ -13,11 +13,11 @@ async def read_root():
     return {"message": "I am Alive!"}
 
 # ----------------------------- Media-Loom-Shown ----------------------------- #
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..core"))
+ROOT = os.path.dirname(os.path.dirname(__file__))
 
 @api.get("/medialoom")
 def media_loom():
-    return FileResponse(os.path.join(BASE_DIR, "index.html"))
+    return FileResponse(os.path.join(ROOT, "core", "index.html"))
     
 # ----------------------------- Upload-Media ----------------------------- #
 
