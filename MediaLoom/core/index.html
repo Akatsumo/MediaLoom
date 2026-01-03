@@ -138,7 +138,7 @@ function uploadFile(file){
   fd.append('media_type', file.type.startsWith('video') ? 'video' : 'photo');
 
   const xhr = new XMLHttpRequest();
-  xhr.open('POST', 'https://yourdomain.com/upload/');
+  xhr.open('POST', 'https://medialoom-d83dbabb0070.herokuapp.com//upload');
 
   xhr.upload.onprogress = e => {
     if(e.lengthComputable){
