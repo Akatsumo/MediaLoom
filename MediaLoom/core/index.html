@@ -6,158 +6,185 @@
   <title>Media Loom – Simple Media Hosting</title>
 
   <!-- SEO -->
-  <meta name="description" content="Media Loom – Upload files, images & videos (up to 1GB) and get instant shareable URLs." />
+  <meta name="description" content="Upload images, videos & files and get instant shareable links. Video limit 1GB." />
   <meta name="keywords" content="media hosting, file upload, image hosting, video hosting" />
 
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 text-white flex flex-col">
 
-  <!-- Header -->
-  <header class="w-full px-6 py-4 flex justify-between items-center border-b border-white/10 backdrop-blur-md sticky top-0 z-50">
-    <h1 class="text-2xl font-extrabold tracking-wide">
-      <span class="text-indigo-500">Media</span> Loom
-    </h1>
-    <div class="flex gap-6 text-sm font-medium">
-      <button onclick="showUpload()" class="hover:text-indigo-400 transition">Upload</button>
-      <button onclick="showApi()" class="hover:text-indigo-400 transition">API Docs</button>
+<!-- HEADER -->
+<header class="w-full px-6 py-4 flex justify-between items-center border-b border-white/10 backdrop-blur sticky top-0 z-50">
+  <h1 class="text-2xl font-extrabold tracking-wide">
+    <span class="text-indigo-500">Media</span> Loom
+  </h1>
+  <div class="flex gap-6 text-sm font-medium">
+    <button onclick="showUpload()" class="hover:text-indigo-400">Upload</button>
+    <button onclick="showApi()" class="hover:text-indigo-400">API Docs</button>
+  </div>
+</header>
+
+<!-- UPLOAD SECTION -->
+<main id="uploadSection" class="flex-1 flex items-center justify-center px-4">
+  <div class="w-full max-w-xl bg-white/5 border border-white/10 rounded-3xl p-8 shadow-2xl">
+
+    <h2 class="text-3xl font-bold text-center mb-2">Upload your media</h2>
+    <p class="text-center text-gray-400 mb-8">Images • Videos • Files (Video ≤ 1GB)</p>
+
+    <div id="dropZone"
+      class="group flex flex-col items-center justify-center h-64 border-2 border-dashed border-white/20 rounded-2xl cursor-pointer hover:border-indigo-500 hover:bg-indigo-500/5 transition">
+      <svg class="h-16 w-16 mb-4 text-gray-300 group-hover:text-indigo-400" fill="none"
+        stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M7 16V4m0 0l-3 3m3-3l3 3m7 4v8m0 0l-3-3m3 3l3-3" />
+      </svg>
+      <p class="text-lg font-semibold">Drop file here</p>
+      <p class="text-sm text-gray-400">or click to browse</p>
+      <input id="fileInput" type="file" class="hidden" />
     </div>
-  </header>
 
-  <!-- Upload Section -->
-  <main id="uploadSection" class="flex-1 flex items-center justify-center px-4">
-    <div class="w-full max-w-xl bg-white/5 border border-white/10 rounded-3xl p-8 shadow-2xl">
-      <h2 class="text-3xl font-bold text-center mb-2">Upload your media</h2>
-      <p class="text-center text-gray-400 mb-8">Images & videos • Videos up to 1GB</p>
-
-      <div id="dropZone" class="group flex flex-col items-center justify-center h-64 border-2 border-dashed border-white/20 rounded-2xl cursor-pointer hover:border-indigo-500 hover:bg-indigo-500/5 transition-all duration-300">
-        <svg class="h-16 w-16 mb-4 text-gray-300 group-hover:text-indigo-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0l-3 3m3-3l3 3m7 4v8m0 0l-3-3m3 3l3-3" />
-        </svg>
-        <p class="text-lg font-semibold">Drop file here</p>
-        <p class="text-sm text-gray-400">or click to browse</p>
-        <input id="fileInput" type="file" class="hidden" />
+    <!-- PROGRESS -->
+    <div id="progressWrap" class="hidden mt-6">
+      <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+        <div id="progressBar"
+          class="h-2 bg-gradient-to-r from-indigo-500 to-purple-500"
+          style="width:0%"></div>
       </div>
-
-      <div id="progressWrap" class="hidden mt-6">
-        <div class="h-2 bg-white/10 rounded-full overflow-hidden">
-          <div id="progressBar" class="h-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full" style="width:0%"></div>
-        </div>
-      </div>
-
-      <div id="result" class="hidden mt-6 bg-black/40 border border-white/10 p-4 rounded-xl">
-        <p class="text-green-400 font-semibold">Upload successful</p>
-        <a id="fileLink" href="#" target="_blank" class="text-indigo-400 break-all text-sm"></a>
-      </div>
-
-      <p class="text-xs text-gray-500 text-center mt-6">Powered by Media Loom • Secure & Fast</p>
     </div>
-  </main>
 
-  <!-- API Docs Section -->
-  <section id="apiSection" class="hidden flex-1 px-6 py-14 max-w-5xl mx-auto">
-    <div class="bg-white/5 border border-white/10 rounded-3xl p-8 shadow-2xl">
-      <h2 class="text-3xl font-bold mb-6">API Documentation</h2>
+    <!-- RESULT -->
+    <div id="result" class="hidden mt-6 bg-black/40 border border-white/10 p-4 rounded-xl">
+      <p class="text-green-400 font-semibold mb-2">Upload successful 🎉</p>
 
-      <div class="bg-black/50 rounded-xl p-6 text-sm overflow-x-auto">
-<pre><code>POST /upload/
+      <div class="flex items-center gap-2">
+        <a id="fileLink" href="#" target="_blank"
+          class="text-indigo-400 break-all text-sm flex-1"></a>
 
-Form Data:
+        <button onclick="copyLink()"
+          class="px-3 py-1 text-xs rounded-lg bg-indigo-500 hover:bg-indigo-600 transition">
+          Copy
+        </button>
+      </div>
+
+      <p id="copyMsg" class="text-xs text-green-400 mt-2 hidden">Link copied ✅</p>
+    </div>
+
+  </div>
+</main>
+
+<!-- API DOCS -->
+<section id="apiSection" class="hidden flex-1 px-6 py-14 max-w-5xl mx-auto">
+  <div class="bg-white/5 border border-white/10 rounded-3xl p-8 shadow-2xl">
+    <h2 class="text-3xl font-bold mb-6">API Documentation</h2>
+
+    <pre class="bg-black/50 p-6 rounded-xl text-sm overflow-x-auto">
+POST /upload/
+
+FormData:
 - file (binary)
 - media_type: photo | video
 
 Response:
 {
-  "message": "success",
+  "status": "success",
   "link": "https://yourdomain.com/file/abc123.jpg"
-}</code></pre>
-      </div>
+}
+    </pre>
+  </div>
+</section>
 
-      <h3 class="text-xl font-semibold mt-10 mb-4">Python Example</h3>
-      <div class="bg-black rounded-xl p-6 text-sm overflow-x-auto">
-<pre><code>import requests
-
-file_path = "example.jpg"
-url = "https://yourdomain.com/upload/"
-
-with open(file_path, "rb") as file:
-    files = {"file": (file_path, file, "application/octet-stream")}
-    data = {"media_type": "photo"}
-    r = requests.post(url, files=files, data=data)
-
-print(r.json())</code></pre>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="text-center text-xs text-gray-500 py-6 border-t border-white/10">
-    © 2026 Media Loom · Simple Media Hosting
-  </footer>
+<!-- FOOTER -->
+<footer class="text-center text-xs text-gray-500 py-6 border-t border-white/10">
+  © 2026 Media Loom
+</footer>
 
 <script>
-const dropZone = document.getElementById('dropZone');
-const fileInput = document.getElementById('fileInput');
-const progressWrap = document.getElementById('progressWrap');
-const progressBar = document.getElementById('progressBar');
-const result = document.getElementById('result');
-const fileLink = document.getElementById('fileLink');
+const dropZone = document.getElementById("dropZone");
+const fileInput = document.getElementById("fileInput");
+const progressWrap = document.getElementById("progressWrap");
+const progressBar = document.getElementById("progressBar");
+const result = document.getElementById("result");
+const fileLink = document.getElementById("fileLink");
 
-function showApi(){
-  document.getElementById('uploadSection').classList.add('hidden');
-  document.getElementById('apiSection').classList.remove('hidden');
+function showApi() {
+  uploadSection.classList.add("hidden");
+  apiSection.classList.remove("hidden");
 }
-function showUpload(){
-  document.getElementById('apiSection').classList.add('hidden');
-  document.getElementById('uploadSection').classList.remove('hidden');
+function showUpload() {
+  apiSection.classList.add("hidden");
+  uploadSection.classList.remove("hidden");
 }
 
 dropZone.onclick = () => fileInput.click();
-
-dropZone.ondragover = e => { e.preventDefault(); dropZone.classList.add('border-indigo-500'); };
-dropZone.ondragleave = () => dropZone.classList.remove('border-indigo-500');
+dropZone.ondragover = e => { e.preventDefault(); dropZone.classList.add("border-indigo-500"); };
+dropZone.ondragleave = () => dropZone.classList.remove("border-indigo-500");
 dropZone.ondrop = e => {
-  e.preventDefault(); dropZone.classList.remove('border-indigo-500');
+  e.preventDefault();
+  dropZone.classList.remove("border-indigo-500");
   uploadFile(e.dataTransfer.files[0]);
 };
 fileInput.onchange = e => uploadFile(e.target.files[0]);
 
-function uploadFile(file){
-  if(!file) return;
-  if(file.type.startsWith('video') && file.size > 1024*1024*1024){
-    alert('Video limit is 1GB'); return;
+function uploadFile(file) {
+  if (!file) return;
+
+  if (file.type.startsWith("video") && file.size > 1024 * 1024 * 1024) {
+    alert("Video size limit is 1GB");
+    return;
   }
 
-  progressWrap.classList.remove('hidden');
-  result.classList.add('hidden');
-  progressBar.style.width = '0%';
+  progressWrap.classList.remove("hidden");
+  result.classList.add("hidden");
+  progressBar.style.width = "0%";
 
   const fd = new FormData();
-  fd.append('file', file);
-  fd.append('media_type', file.type.startsWith('video') ? 'video' : 'photo');
+  fd.append("file", file);
+  fd.append("media_type", file.type.startsWith("video") ? "video" : "photo");
 
   const xhr = new XMLHttpRequest();
-  xhr.open('POST', 'https://medialoom-d83dbabb0070.herokuapp.com/upload');
+  xhr.open("POST", "https://medialoom-d83dbabb0070.herokuapp.com/upload");
 
   xhr.upload.onprogress = e => {
-    if(e.lengthComputable){
-      progressBar.style.width = (e.loaded/e.total)*100 + '%';
+    if (e.lengthComputable) {
+      progressBar.style.width = (e.loaded / e.total) * 100 + "%";
     }
   };
 
   xhr.onload = () => {
-    progressWrap.classList.add('hidden');
-    if(xhr.status === 200){
-      const res = JSON.parse(xhr.responseText);
+    let res;
+    try {
+      res = JSON.parse(xhr.responseText);
+    } catch {
+      alert("Invalid server response");
+      return;
+    }
+
+    console.log("SERVER RESPONSE:", res);
+
+    if (xhr.status === 200 && res.status === "success") {
       fileLink.href = res.link;
       fileLink.textContent = res.link;
-      result.classList.remove('hidden');
-    } else alert('Upload failed');
+      result.classList.remove("hidden");
+    } else {
+      alert(res.message || "Upload failed");
+    }
+
+    progressWrap.classList.add("hidden");
   };
 
+  xhr.onerror = () => alert("Network error");
   xhr.send(fd);
 }
+
+function copyLink() {
+  navigator.clipboard.writeText(fileLink.href);
+  const msg = document.getElementById("copyMsg");
+  msg.classList.remove("hidden");
+  setTimeout(() => msg.classList.add("hidden"), 2000);
+}
 </script>
+
 </body>
 </html>
