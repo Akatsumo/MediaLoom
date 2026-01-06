@@ -84,8 +84,7 @@ async def upload_media(
         file_code = await filesdb.save_file(
             channel_id=config.CHANNEL_ID,
             media_id=sent.id,
-            ext=ext,
-            size=file_size
+            ext=ext
         )
 
         return {
