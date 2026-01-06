@@ -53,9 +53,8 @@ async def upload_media(file: UploadFile = File(...), media_type: str = Form(...)
 
     temp_filename = f"{uuid.uuid4()}.{ext}"
     temp_path = os.path.join(TEMP_DIR, temp_filename)
-
-
-
+    file_size = 0
+    
     try:
         # -------- STREAM UPLOAD (RAM SAFE) -------- #
         with open(temp_path, "wb") as buffer:
