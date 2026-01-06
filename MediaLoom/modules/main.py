@@ -65,7 +65,7 @@ async def upload_media(file: UploadFile = File(...), media_type: str = Form(...)
                 buffer.write(chunk)
 
         # -------- SEND TO TELEGRAM -------- #
-        sent = await core_func.send_media(app, config.CHANNEL_ID, file.filename, media_type)
+        sent = await core_func.send_media(app, config.CHANNEL_ID, temp_path , media_type)
         if not sent:
             error_message = "Something went wrong while sending the file. Please contact the owner for assistance."
             return {"status": "error", "message": error_message}
