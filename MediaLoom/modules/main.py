@@ -18,13 +18,6 @@ TEMP_DIR = "temp"
 CACHE_DIR = "static/files"
 MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024  # 2GB
 
-ALLOWED_EXTENSIONS = {
-    "jpg", "jpeg", "png", "webp", "gif",
-    "mp4", "mkv", "mov", "avi",
-    "mp3", "wav", "ogg",
-    "pdf", "zip", "rar"
-}
-
 os.makedirs(TEMP_DIR, exist_ok=True)
 os.makedirs(CACHE_DIR, exist_ok=True)
 
@@ -48,15 +41,11 @@ async def upload_media(file: UploadFile = File(...), media_type: str = Form(...)
         raise HTTPException(400, "Invalid file")
 
     ext = file.filename.rsplit(".", 1)[-1].lower()
-    # if ext not in ALLOWED_EXTENSIONS:
-    #     raise HTTPException(400, "Unsupported file type")
-
     temp_filename = f"{uuid.uuid4()}.{ext}"
     temp_path = os.path.join(TEMP_DIR, temp_filename)
     file_size = 0
     
     try:
-        # -------- STREAM UPLOAD (RAM SAFE) -------- #
         with open(temp_path, "wb") as buffer:
             while chunk := await file.read(1024 * 1024):
                 file_size += len(chunk)
@@ -64,7 +53,6 @@ async def upload_media(file: UploadFile = File(...), media_type: str = Form(...)
                     raise HTTPException(413, "File too large")
                 buffer.write(chunk)
 
-        # -------- SEND TO TELEGRAM -------- #
         sent = await core_func.send_media(app, config.CHANNEL_ID, temp_path , media_type)
         if not sent:
             error_message = "Something went wrong while sending the file. Please contact the owner for assistance."
