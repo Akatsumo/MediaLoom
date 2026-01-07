@@ -7,11 +7,11 @@ db = mongo.FilesDB
 collection = db.MediaData
 
 # -------------------------------- Save File -------------------------------- #
-async def save_file(channel_id, msg_id, extension):
+async def save_file(channel_id, msg_id):
     file_id = secrets.token_hex(10)
     await collection.update_one(
         {"_id": file_id},
-        {"$set": {"channel_id": channel_id, "media_id": msg_id, "ext_type": extension}},
+        {"$set": {"channel_id": channel_id, "media_id": msg_id}},
         upsert=True
     )
     return file_id
