@@ -48,8 +48,8 @@ async def upload_media(file: UploadFile = File(...), media_type: str = Form(...)
         raise HTTPException(400, "Invalid file")
 
     ext = file.filename.rsplit(".", 1)[-1].lower()
-    if ext not in ALLOWED_EXTENSIONS:
-        raise HTTPException(400, "Unsupported file type")
+    # if ext not in ALLOWED_EXTENSIONS:
+    #     raise HTTPException(400, "Unsupported file type")
 
     temp_filename = f"{uuid.uuid4()}.{ext}"
     temp_path = os.path.join(TEMP_DIR, temp_filename)
