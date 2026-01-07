@@ -15,11 +15,11 @@ from fastapi.responses import FileResponse
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
 TEMP_DIR = "temp"
-CACHE_DIR = "static/files"
+BASE_DIR = "static/files"
 MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024  # 2GB
 
 os.makedirs(TEMP_DIR, exist_ok=True)
-os.makedirs(CACHE_DIR, exist_ok=True)
+os.makedirs(BASE_DIR, exist_ok=True)
 
 # ----------------------------- HEALTH CHECK ----------------------------- #
 
@@ -71,44 +71,61 @@ async def upload_media(file: UploadFile = File(...), media_type: str = Form(...)
 @api.get("/file/{file_name}")
 async def serve_file(file_name: str):
     try:
-        save_folder = "static/files"
-        os.makedirs(save_folder, exist_ok=True)
+        if ".." in file_name or "/" in file_name or "\\" in file_name:
+            raise HTTPException(status_code=400, detail="Invalid file name")
 
-        file_path = os.path.join(save_folder, file_name)
+        os.makedirs(BASE_DIR, exist_ok=True)
+        file_path = os.path.join(BASE_DIR, file_name)
 
         if not os.path.exists(file_path):
-            file_code, ext = file_name.rsplit(".", 1)
+            if "." not in file_name:
+                raise HTTPException(status_code=400, detail="Invalid file format")
+
+            file_code, _ = file_name.rsplit(".", 1)
             file_data = await filesdb.get_file(file_code)
+
             if not file_data:
-                raise HTTPException(status_code=404, detail="File not found in database.")
+                raise HTTPException(status_code=404, detail="File not found")
 
-            msg = await app.get_messages(config.CHANNEL_ID, file_data["media_id"])
-            downloaded_path = await asyncio.create_task(app.download_media(msg, file_name=file_path))
+            msg = await app.get_messages(
+                config.CHANNEL_ID,
+                file_data["media_id"]
+            )
 
-            if not os.path.exists(downloaded_path):
-                raise HTTPException(status_code=500, detail="Failed to download file from Telegram.")
+            downloaded_path = await app.download_media(
+                msg,
+                file_name=file_path
+            )
+
+            if not downloaded_path or not os.path.exists(downloaded_path):
+                raise HTTPException(status_code=500, detail="Telegram download failed")
 
         file_size = os.path.getsize(file_path)
-        ext = file_name.split(".")[-1].lower()
 
-        if ext in ["mp4", "mkv", "mov", "avi"]:
-            media_type = f"video/{ext if ext != 'mkv' else 'x-matroska'}"
-        elif ext in ["jpg", "jpeg", "png", "gif", "webp"]:
-            media_type = f"image/{ext}"
-        elif ext == "pdf":
-            media_type = "application/pdf"
-        else:
-            media_type = "application/octet-stream"
+        media_type, _ = mimetypes.guess_type(file_path)
+        media_type = media_type or "application/octet-stream"
 
         if media_type.startswith("video/") and file_size > 50 * 1024 * 1024:
             return FileResponse(
                 file_path,
                 media_type="application/octet-stream",
                 filename=file_name,
-                headers={"Content-Disposition": f"attachment; filename={file_name}"}
+                headers={
+                    "Content-Disposition": f'attachment; filename="{file_name}"'
+                }
             )
 
-        return FileResponse(file_path, media_type=media_type)
+        return FileResponse(
+            file_path,
+            media_type=media_type,
+            filename=file_name
+        )
 
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
