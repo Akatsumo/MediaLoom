@@ -1,6 +1,5 @@
 import os
 import uuid
-import asyncio
 import mimetypes
 
 import config
@@ -16,7 +15,7 @@ from fastapi.responses import FileResponse
 ROOT = os.path.dirname(os.path.dirname(__file__))
 TEMP_DIR = "temp"
 BASE_DIR = "static/files"
-MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024  # 2GB
+MAX_FILE_SIZE = 2 * 1024 * 1024 * 1024
 
 os.makedirs(TEMP_DIR, exist_ok=True)
 os.makedirs(BASE_DIR, exist_ok=True)
@@ -44,37 +43,43 @@ async def upload_media(file: UploadFile = File(...), media_type: str = Form(...)
     temp_filename = f"{uuid.uuid4()}.{ext}"
     temp_path = os.path.join(TEMP_DIR, temp_filename)
     file_size = 0
-    
+
     try:
         with open(temp_path, "wb") as buffer:
-            while chunk := await file.read(1024 * 1024):
+            while True:
+                chunk = await file.read(1024 * 1024)
+                if not chunk:
+                    break
                 file_size += len(chunk)
                 if file_size > MAX_FILE_SIZE:
                     raise HTTPException(413, "File too large")
                 buffer.write(chunk)
 
-        sent = await core_func.send_media(app, config.CHANNEL_ID, temp_path , media_type)
+        sent = await core_func.send_media(app, config.CHANNEL_ID, temp_path, media_type)
         if not sent:
-            error_message = "Something went wrong while sending the file. Please contact the owner for assistance."
-            return {"status": "error", "message": error_message}
-            
-        file_code = await filesdb.save_file(config.CHANNEL_ID, sent.id, ext)
+            return {"status": "error", "message": "Something went wrong while sending the file. Please contact the owner for assistance."}
+
+        file_code = await filesdb.save_file(config.CHANNEL_ID, sent.id)
         link = f"{config.BASE_URL}/file/{file_code}.{ext}"
-        os.remove(file.filename)
+
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+
         return {"status": "success", "link": link}
+
     except Exception as e:
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
         return {"status": "error", "message": str(e)}
-    
+
 
 # ----------------------------- SERVE FILE ----------------------------- #
-
 @api.get("/file/{file_name}")
 async def serve_file(file_name: str):
     try:
         if ".." in file_name or "/" in file_name or "\\" in file_name:
             raise HTTPException(status_code=400, detail="Invalid file name")
 
-        os.makedirs(BASE_DIR, exist_ok=True)
         file_path = os.path.join(BASE_DIR, file_name)
 
         if not os.path.exists(file_path):
@@ -128,4 +133,7 @@ async def serve_file(file_name: str):
             status_code=500,
             detail=str(e)
         )
+
+
+
 
