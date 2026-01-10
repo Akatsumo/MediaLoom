@@ -13,7 +13,6 @@
 <p>
   • ᴜɴʟɪᴍɪᴛᴇᴅ ᴅᴀᴛᴀʙᴀꜱᴇ <br>
   • ᴀʟʟ ᴍᴇᴅɪᴀ sᴜᴘᴘᴏʀᴛ <br>
-  • ʟᴀʀɢᴇ ғɪʟᴇ sᴜᴘᴘᴏʀᴛ <br>
 </p>
 
 ---
@@ -40,7 +39,7 @@
     </li>
     <li>
       <b>𝙲𝚕𝚘𝚗𝚎 𝚝𝚑𝚎 𝚛𝚎𝚙𝚘𝚜𝚒𝚝𝚘𝚛𝚢:</b><br>
-      <pre>git clone https://github.com/Sumit0045/MediaLoom</pre>
+      <pre>git clone https://github.com/Akatsumo/MediaLoom</pre>
       <pre>cd MediaLoom</pre>
     </li>
     <li>
