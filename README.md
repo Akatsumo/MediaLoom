@@ -3,7 +3,7 @@
 <p align="center">ʜᴇʟʟᴏ, ɪ'ᴍ ᴍᴇᴅɪᴀ ʟᴏᴏᴍ! ɪ ᴄᴀɴ ʜᴏsᴛ ᴀɴʏ ᴛʏᴘᴇ ᴏғ ᴍᴇᴅɪᴀ, ɪɴᴄʟᴜᴅɪɴɢ ʟᴀʀɢᴇ ғɪʟᴇs, ᴡɪᴛʜ ᴜɴʟɪᴍɪᴛᴇᴅ sᴛᴏʀᴀɢᴇ. ғᴇᴇʟ ғʀᴇᴇ ᴛᴏ ᴜᴘʟᴏᴀᴅ ʏᴏᴜʀ ғɪʟᴇs, ᴀɴᴅ ɪ'ʟʟ ᴛᴀᴋᴇ ᴄᴀʀᴇ ᴏғ ᴛᴇʀᴇsᴛ!</p>
 
 <p align="center">
-  <img src="https://graph.org/file/371c915b8c97ecf62a2d6-edbae9f1a9a3ff4add.jpg" alt="MediaLoom Bot" />
+  <img src="[https://graph.org/file/371c915b8c97ecf62a2d6-edbae9f1a9a3ff4add.jpg](https://medialoom-d83dbabb0070.herokuapp.com/file/8df13e85b772bb821803.png" alt="MediaLoom Bot" />
 </p>
 
 ---
