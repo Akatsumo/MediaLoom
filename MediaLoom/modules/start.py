@@ -1,11 +1,12 @@
-from pyrogram import filters, enums
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+import config
 from MediaLoom import app, BOT_NAME
+from pyrogram import filters, enums
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 
 
 buttons = InlineKeyboardMarkup([
                 [
-                  InlineKeyboardButton("Website", url="https://medialoom-d83dbabb0070.herokuapp.com/medialoom")
+                  InlineKeyboardButton("🌐 Open WebApp", web_app=WebAppInfo(url=f"{config.BASE_URL}/medialoom")
                 ],[
                   InlineKeyboardButton("Repository", url="https://github.com/Akatsumo/MediaLoom")
                 ]])
