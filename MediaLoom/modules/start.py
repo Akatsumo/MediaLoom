@@ -7,7 +7,7 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInf
 buttons = InlineKeyboardMarkup([
                 [
                   InlineKeyboardButton("🌐 Open WebApp", web_app=WebAppInfo(url=f"{config.BASE_URL}/medialoom")
-                ],[
+                )],[
                   InlineKeyboardButton("Repository", url="https://github.com/Akatsumo/MediaLoom")
                 ]])
 
