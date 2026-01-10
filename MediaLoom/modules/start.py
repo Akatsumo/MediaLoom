@@ -5,9 +5,9 @@ from MediaLoom import app, BOT_NAME
 
 buttons = InlineKeyboardMarkup([
                 [
-                  InlineKeyboardButton("How to use me?", url="https://t.me/MediaLoom")
+                  InlineKeyboardButton("Website", url="https://medialoom-d83dbabb0070.herokuapp.com/medialoom")
                 ],[
-                  InlineKeyboardButton("Repository", url="https://github.com/Sumit0045/MediaLoom")
+                  InlineKeyboardButton("Repository", url="https://github.com/Akatsumo/MediaLoom")
                 ]])
 
 @app.on_message(filters.command("start"))
