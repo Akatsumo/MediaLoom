@@ -1,0 +1,16 @@
+user:
+  name: ishikki
+  github: ishikki-akabane
+
+runtime:
+  image: "python:3.11-slim"
+
+commands:
+  build:
+    - "pip install -r requirements.txt"
+  package: ""
+  start: "python m Restriction"
+
+repository:
+  branch: "main"
+  auto_deploy: true
