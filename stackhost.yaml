@@ -1,6 +1,6 @@
 user:
-  name: ishikki
-  github: ishikki-akabane
+  name: sumit-yadav
+  github: akatsumo
 
 runtime:
   image: "python:3.11-slim"
