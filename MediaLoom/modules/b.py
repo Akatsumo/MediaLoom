@@ -1,7 +1,7 @@
-import httpx
+import httpx, config
 from fastapi import UploadFile, File, Form, HTTPException
 from fastapi.responses import RedirectResponse
-from MediaLoom import api, app, config
+from MediaLoom import api, app
 from MediaLoom.core import core_func
 from MediaLoom.core.mongo import filesdb
 
