@@ -9,7 +9,7 @@ buttons = InlineKeyboardMarkup([
         InlineKeyboardButton(
             "🌐 Open WebApp",
             web_app=WebAppInfo(
-                url=f"{config.WEB_URL.rstrip('/')}/medialoom"
+                url=f"{config.BASE_URL.rstrip('/')}/medialoom"
             )
         )
     ],
