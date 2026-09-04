@@ -4,3 +4,4 @@ uvicorn
 motor
 python-multipart
 TgCrypto 
+httpx
